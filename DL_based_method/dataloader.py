@@ -5,9 +5,11 @@
 # @Site    : zhanghuaizheng.info
 # @File    : dataloader.py
 
+import os
 import torch
 import numpy as np
 from torch.utils.data import Dataset
+import pickle
 
 class abrDataset(Dataset):
     def __init__(self, x, y):
@@ -31,5 +33,17 @@ class abrDataset(Dataset):
 
 class segDataset(Dataset):
     def __init__(self, path):
-        
+        # This part has no order!
+        self.segments = [os.path.join(path, i) for i in os.listdir(path)]
+
+    def __len__(self):
+        return len(self.segments)
+
+    def __getitem__(self, idx):
+        with open(self.segments[idx], 'rb') as f:
+            data = pickle.load(f)[:, 0:-1]
+            x = data[:, 0:-1]
+            y = data[:, -1]
+
+
 
