@@ -31,6 +31,7 @@ class abrDataset(Dataset):
 
         return sample
 
+
 class segDataset(Dataset):
     def __init__(self, path):
         # This part has no order!
@@ -41,9 +42,14 @@ class segDataset(Dataset):
 
     def __getitem__(self, idx):
         with open(self.segments[idx], 'rb') as f:
-            data = pickle.load(f)[:, 0:-1]
-            x = data[:, 0:-1]
+            data = pickle.load(f)
+            x = np.array(data[:, 0:-1], dtype=np.float32)
             y = data[:, -1]
+
+        sample = {'segment': x, 'bandwidth': y}
+
+        return sample
+
 
 
 

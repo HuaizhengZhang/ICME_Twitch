@@ -38,12 +38,16 @@ def main():
     y_val = y[train_size:]
 
     train_data = abrDataset(x_train, y_train)
+    # print(train_data[0])
+    # return
     train_loader = data_utils.DataLoader(train_data, batch_size=cfg.BATCH_SIZE, shuffle=False)
 
     for epoch in range(cfg.EPOCHS):
         for batch_idx, sample_batched in enumerate(train_loader):
             pid = os.getpid()
             x_1 = Variable(sample_batched['arr_time'].type(torch.FloatTensor).cuda())
+            # print (x_1)
+            # return
             x_2 = Variable(sample_batched['bytes'].type(torch.FloatTensor).cuda())
             x_3 = Variable(sample_batched['bitrate'].type(torch.FloatTensor).cuda())
             x_4 = Variable(sample_batched['segment_idx'].type(torch.FloatTensor).cuda())

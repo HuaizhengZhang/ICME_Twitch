@@ -43,23 +43,24 @@ class baseNN(nn.Module):
 
         return h
 
-class baseLSTM(nn.Model):
-    def __init__(self, input_size, hidden_size, num_layers):
+class baseLSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, num_layers, batch_size):
         super(baseLSTM, self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
-
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers)
+        self.batch_size = batch_size
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
         self.fc1 = nn.Linear(hidden_size, 1)
         self.hidden_state = self.init_hidden()
 
-    def init_hidden(self, x):
-        return (Variable(torch.zeros(self.num_layers, x.size(0), self.hidden_size)).cuda(),
-                Variable(torch.zeros(self.num_layers, x.size(0), self.hidden_size)).cuda())
+    def init_hidden(self):
+        return (Variable(torch.zeros(self.num_layers, self.batch_size, self.hidden_size)).cuda(),
+                Variable(torch.zeros(self.num_layers, self.batch_size, self.hidden_size)).cuda())
 
     def forward(self, x):
         lstm_out, self.hidden_state = self.lstm(x, self.hidden_state)
-        out = self.fc1(lstm_out[: -1, :])
+        # print(lstm_out)
+        out = self.fc1(lstm_out)
         return out
 
 

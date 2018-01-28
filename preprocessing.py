@@ -55,4 +55,3 @@ def seperate_data(path):
     else:
         print('Finished')
 
-seperate_data(cfg.TRAINING_DATA_PATH)
